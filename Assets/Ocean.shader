@@ -72,7 +72,9 @@ Shader "Water/Ocean"
 				float _YCoord = 0.07 * (sin(i.world_position.x * 3.5 / 100 + _Time[1] * 0.35) + sin(i.world_position.x * 4.8 / 100 + _Time[1] * 1.05) + sin(i.world_position.x / 100 * 7.3 + _Time[1] * 0.45)) / 3;
 				float2 _SampleUV = i.uv + float2(_XCoord, _YCoord);
 				fixed4 col = tex2D(_OceanMask, _SampleUV);
-				col = col + i.color;
+				fixed4 undertone = tex2D(_OceanMask, _SampleUV + float2(0.2, 0.2));
+				undertone = undertone * i.color * 0.1;
+				col = col + i.color - undertone;
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
